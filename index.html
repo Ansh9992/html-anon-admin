@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Chat Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="dashboard-title">Anonymous Chat Admin Dashboard</h1>
+                    <div class="datetime-display" id="datetime"></div>
+                </div>
+                <div class="header-right">
+                    <div class="stats-counter">
+                        <div class="stat-item">
+                            <span class="stat-value" id="active-users-counter">23</span>
+                            <span class="stat-label">Active Users</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="total-messages-counter">8934</span>
+                            <span class="stat-label">Total Messages</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="active-rooms-counter">12</span>
+                            <span class="stat-label">Active Rooms</span>
+                        </div>
+                    </div>
+                    <button class="btn btn--outline theme-toggle" id="theme-toggle">🌙</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="dashboard-nav">
+        <div class="container">
+            <ul class="nav-tabs">
+                <li class="nav-tab active" data-tab="overview">Overview</li>
+                <li class="nav-tab" data-tab="users">Users</li>
+                <li class="nav-tab" data-tab="chat-rooms">Chat Rooms</li>
+                <li class="nav-tab" data-tab="messages">Messages</li>
+                <li class="nav-tab" data-tab="security">Security</li>
+                <li class="nav-tab" data-tab="settings">Settings</li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <!-- Overview Tab -->
+            <div class="tab-content active" id="overview">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">👥</div>
+                        <div class="metric-value">1,247</div>
+                        <div class="metric-label">Total Users</div>
+                        <div class="metric-change positive">+12%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🟢</div>
+                        <div class="metric-value">23</div>
+                        <div class="metric-label">Active Users</div>
+                        <div class="metric-change positive">+5%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💬</div>
+                        <div class="metric-value">8,934</div>
+                        <div class="metric-label">Total Messages</div>
+                        <div class="metric-change positive">+18%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🏠</div>
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Active Rooms</div>
+                        <div class="metric-change neutral">0%</div>
+                    </div>
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-section">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>System Status</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="status-indicators">
+                                    <div class="status-item">
+                                        <span class="status status--success">Server</span>
+                                        <span class="status-uptime">99.8%</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status status--success">Database</span>
+                                        <span class="status-uptime">99.9%</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status status--success">WebSocket</span>
+                                        <span class="status-uptime">100%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-section">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Recent Activity</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="activity-feed" id="activity-feed">
+                                    <div class="activity-item">
+                                        <span class="activity-time">12:05</span>
+                                        <span class="activity-text">New user joined: FriendlyStranger</span>
+                                    </div>
+                                    <div class="activity-item">
+                                        <span class="activity-time">12:04</span>
+                                        <span class="activity-text">Chat room created: room_001</span>
+                                    </div>
+                                    <div class="activity-item">
+                                        <span class="activity-time">12:03</span>
+                                        <span class="activity-text">Message sent in room_002</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-section">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Messages Per Hour</h3>
+                            </div>
+                            <div class="card__body">
+                                <canvas id="messages-chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-section">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Gender Distribution</h3>
+                            </div>
+                            <div class="card__body">
+                                <canvas id="gender-chart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div class="tab-content" id="users">
+                <div class="tab-header">
+                    <h2>User Management</h2>
+                    <div class="tab-actions">
+                        <input type="text" class="form-control search-input" placeholder="Search users..." id="users-search">
+                        <button class="btn btn--primary" onclick="exportData('users')">Export Data</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <table class="data-table" id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Session ID</th>
+                                    <th>Username</th>
+                                    <th>Gender</th>
+                                    <th>Looking For</th>
+                                    <th>Status</th>
+                                    <th>Join Time</th>
+                                    <th>Last Activity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody">
+                                <!-- Users will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Rooms Tab -->
+            <div class="tab-content" id="chat-rooms">
+                <div class="tab-header">
+                    <h2>Active Chat Rooms</h2>
+                    <div class="tab-actions">
+                        <input type="text" class="form-control search-input" placeholder="Search rooms..." id="rooms-search">
+                        <button class="btn btn--primary" onclick="exportData('rooms')">Export Data</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <table class="data-table" id="rooms-table">
+                            <thead>
+                                <tr>
+                                    <th>Room ID</th>
+                                    <th>Participants</th>
+                                    <th>Messages Count</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rooms-tbody">
+                                <!-- Rooms will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Tab -->
+            <div class="tab-content" id="messages">
+                <div class="tab-header">
+                    <h2>Message Monitoring</h2>
+                    <div class="tab-actions">
+                        <select class="form-control" id="message-filter">
+                            <option value="all">All Messages</option>
+                            <option value="room_001">Room 001</option>
+                            <option value="room_002">Room 002</option>
+                            <option value="room_003">Room 003</option>
+                        </select>
+                        <button class="btn btn--primary" onclick="exportData('messages')">Export Data</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card__body">
+                        <table class="data-table" id="messages-table">
+                            <thead>
+                                <tr>
+                                    <th>Room ID</th>
+                                    <th>From</th>
+                                    <th>Message</th>
+                                    <th>Timestamp</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messages-tbody">
+                                <!-- Messages will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div class="tab-content" id="security">
+                <div class="tab-header">
+                    <h2>Security Monitor</h2>
+                    <div class="tab-actions">
+                        <button class="btn btn--secondary" onclick="clearAlerts()">Clear All Alerts</button>
+                    </div>
+                </div>
+                <div class="security-grid">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Security Alerts</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="alerts-list" id="alerts-list">
+                                <!-- Alerts will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Security Metrics</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="security-metrics">
+                                <div class="metric-row">
+                                    <span class="metric-name">Failed Connections</span>
+                                    <span class="metric-value">23</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-name">Rate Limit Hits</span>
+                                    <span class="metric-value">12</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-name">Blocked IPs</span>
+                                    <span class="metric-value">5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings">
+                <div class="tab-header">
+                    <h2>System Settings</h2>
+                    <div class="tab-actions">
+                        <button class="btn btn--primary" onclick="saveSettings()">Save Settings</button>
+                    </div>
+                </div>
+                <div class="settings-grid">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Rate Limiting</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label">Messages per minute</label>
+                                <input type="number" class="form-control" value="30" id="rate-limit-messages">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Connections per hour</label>
+                                <input type="number" class="form-control" value="100" id="rate-limit-connections">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>User Matching</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="form-group">
+                                <label class="form-label">Max wait time (seconds)</label>
+                                <input type="number" class="form-control" value="60" id="max-wait-time">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Enable gender preference</label>
+                                <select class="form-control" id="gender-preference">
+                                    <option value="true">Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Details Modal -->
+    <div class="modal" id="user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="user-modal-body">
+                <!-- User details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
